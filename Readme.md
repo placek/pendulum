@@ -4,7 +4,7 @@ Pendulum
 What is Pendulum?
 -----------------
 
-Pendulum is nothing else than a simple phisics simulation fpr complex
+Pendulum is nothing else than a simple phisics simulation for complex
 pendulum (a chain of components).
 
 The Pendulum project is a study project that realises subject called

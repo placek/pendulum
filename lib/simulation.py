@@ -70,12 +70,12 @@ class SimulationRunner(threading.Thread):
       if pressed[K_UP]:
         camera.rotate((-1.0, 0.0, 0.0))
       elif pressed[K_DOWN]:
-        camera.rotate(Vector3(+1.0, 0.0, 0.0))
+        camera.rotate((+1.0, 0.0, 0.0))
       if pressed[K_q]:
         camera.move(-1.0)
       elif pressed[K_a]:
         camera.move(+1.0)
-      camera.rotate(Vector3(0.0, 0.0, 0.0))
+      camera.rotate((0.0, 0.0, 0.0))
 
       # light must be transformed as well
       glLight(GL_LIGHT0, GL_POSITION,  (0, 1.5, 1, 0))
