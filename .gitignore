@@ -2,4 +2,5 @@ tags
 *~
 *.swp
 *.swo
+*.pyc
 tmp
