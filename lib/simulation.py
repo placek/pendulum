@@ -16,6 +16,7 @@ except:
 class SimulationRunner(threading.Thread):
 
   screen_size = (800, 600)
+  killed = False
 
   # OpenGL window on_resize event handling
   def __resize(self, width, height):
@@ -40,6 +41,9 @@ class SimulationRunner(threading.Thread):
     glEnable(GL_LIGHT0)
     glLight(GL_LIGHT0, GL_POSITION,  (0, 1, 1, 0))
 
+  def kill(self):
+    self.killed = True
+
   # thread body
   def run(self):
     self.__init()
@@ -49,12 +53,10 @@ class SimulationRunner(threading.Thread):
     cube = Cube((0.0, 0.0, 0.0), (255.0, 0.0, 0.0))
     camera = Camera(clock, 5.0)
 
-    while True:
+    while not self.killed:
       for event in pygame.event.get():
         if event.type == QUIT:
-          sys.exit()
-        if event.type == KEYUP and event.key == K_ESCAPE:
-          sys.exit()
+          return
 
       # clear the screen, and z-buffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

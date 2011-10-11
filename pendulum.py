@@ -13,6 +13,10 @@ class PendulumApp:
   def __init__(self, master):
     frame = Frame(master)
     frame.pack()
+    self.simulation_thread = SimulationRunner()
+    # intructions_label
+    w = Label(frame, text = "How to use it?\narrows\trotate cam\nq, a\tzoom")
+    w.pack()
     # run_sumulation_button
     self.run_simulation_button = Button(frame, text = "Simulation", command = self.run_simulation)
     self.run_simulation_button.pack(side = LEFT)
@@ -21,10 +25,11 @@ class PendulumApp:
     self.quit_button.pack(side=LEFT)
 
   def quit(self):
+    self.simulation_thread.kill()
     sys.exit()
 
   def run_simulation(self):
-    SimulationRunner().start()
+    self.simulation_thread.start()
 
 root = Tk()
 app = PendulumApp(root)
