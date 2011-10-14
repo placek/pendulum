@@ -7,7 +7,7 @@ try:
   from OpenGL.GLU import *
   from pygame.locals import *
   from lib.camera import *
-  from lib.cube import *
+  from lib.objects3d import *
 except:
   print '''pendulum: simulation error: failed to load libraries'''
   sys.exit()
@@ -50,7 +50,7 @@ class SimulationRunner(threading.Thread):
     clock = pygame.time.Clock()
     glMaterial(GL_FRONT, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
     glMaterial(GL_FRONT, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-    cube = Cube((0.0, 0.0, 0.0), (255.0, 0.0, 0.0))
+    rods = ( Rod((0.0, 0.0, 0.0), (1.0, 1.0, 0.0)) , Rod((1.0, 1.0, 0.0), (1.0, 0.0, 0.0)) )
     camera = Camera(clock, 5.0)
 
     while not self.killed:
@@ -78,10 +78,11 @@ class SimulationRunner(threading.Thread):
       camera.rotate((0.0, 0.0, 0.0))
 
       # light must be transformed as well
-      glLight(GL_LIGHT0, GL_POSITION,  (0, 1.5, 1, 0))
+      # glLight(GL_LIGHT0, GL_POSITION,  (0, 1.5, 1, 0))
 
-      # render the cube
-      cube.render()
+      # render the rods
+      for rod in rods:
+        rod.render()
 
       # show the screen
       pygame.display.flip()
