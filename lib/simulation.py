@@ -1,12 +1,10 @@
 try:
   import sys
   import threading
-  from math import radians
   import pygame
   from OpenGL.GL import *
   from OpenGL.GLU import *
   from pygame.locals import *
-  from lib.camera import *
   from lib.objects3d import *
 except:
   print '''pendulum: simulation error: failed to load libraries'''
@@ -15,7 +13,7 @@ except:
 
 class SimulationRunner(threading.Thread):
 
-  screen_size = (800, 600)
+  screen_size = (500, 500)
   killed = False
 
   # OpenGL window on_resize event handling
@@ -50,7 +48,9 @@ class SimulationRunner(threading.Thread):
     clock = pygame.time.Clock()
     glMaterial(GL_FRONT, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
     glMaterial(GL_FRONT, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-    rods = ( Rod((0.0, 0.0, 0.0), (1.0, 1.0, 0.0)) , Rod((1.0, 1.0, 0.0), (1.0, 0.0, 0.0)) )
+    chain = RodsChain()
+    chain.push(1.0, 45.0)
+    chain.push(0.5, 0.0)
     camera = Camera(clock, 5.0)
 
     while not self.killed:
@@ -77,12 +77,8 @@ class SimulationRunner(threading.Thread):
         camera.move(+1.0)
       camera.rotate((0.0, 0.0, 0.0))
 
-      # light must be transformed as well
-      # glLight(GL_LIGHT0, GL_POSITION,  (0, 1.5, 1, 0))
-
-      # render the rods
-      for rod in rods:
-        rod.render()
+      # render the chain
+      chain.render()
 
       # show the screen
       pygame.display.flip()

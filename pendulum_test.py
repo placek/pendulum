@@ -1,7 +1,6 @@
 import unittest
 import pygame
 import math
-from lib.camera import *
 from lib.objects3d import *
 
 class TestCamera(unittest.TestCase):
@@ -39,6 +38,31 @@ class TestRod(unittest.TestCase):
 
   def test_instance_angle_method(self):
     self.assertEqual(self.rod.angle(), 2.1347389681555256)
+
+
+class TestRodsChain(unittest.TestCase):
+
+  def setUp(self):
+    self.chain = RodsChain()
+    self.chain.push(math.sqrt(2), 45.0)
+    self.chain.push(1.0, 180.0)
+    self.chain.push(2.0, 90.0)
+
+  def test_positions_and_tips_of_rods_in_chain(self):
+    self.assertAlmostEqual(self.chain.rods[0].length(), math.sqrt(2))
+    self.assertAlmostEqual(self.chain.rods[0].angle(), math.radians(45.0))
+    self.assertEqual(self.chain.position, (0.0, 0.0, 0.0))
+    self.assertEqual(self.chain.rods[0].position, (0.0, 0.0, 0.0))
+    self.assertAlmostEqual(self.chain.rods[0].tip[0], 1.0)
+    self.assertAlmostEqual(self.chain.rods[0].tip[1], -1.0)
+    self.assertAlmostEqual(self.chain.rods[1].position[0], 1.0)
+    self.assertAlmostEqual(self.chain.rods[1].position[1], -1.0)
+    self.assertAlmostEqual(self.chain.rods[1].tip[0], 1.0)
+    self.assertAlmostEqual(self.chain.rods[1].tip[1], 0.0)
+    self.assertAlmostEqual(self.chain.rods[2].position[0], 1.0)
+    self.assertAlmostEqual(self.chain.rods[2].position[1], 0.0)
+    self.assertAlmostEqual(self.chain.rods[2].tip[0], 3.0)
+    self.assertAlmostEqual(self.chain.rods[2].tip[1], 0.0)
 
 
 if __name__ == '__main__':
