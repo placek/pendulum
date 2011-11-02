@@ -65,7 +65,12 @@ class Rod(object):
 
   def angle(self):
     """returns angle, of which the rod is rotated from a vertical direction around Z-axis"""
-    return math.acos(-(self.to_vector3()._get_1() / self.length()))
+    x, y = self.to_vector3()._get_0(), self.to_vector3()._get_1()
+    return math.copysign(1, x) * math.acos(-y / math.sqrt(x * x + y * y))
+
+  def to_string(self):
+    """returns info about rod"""
+    return "len_" + str(self.length()) + "__ang_" + str(math.degrees(self.angle()))
 
   def render(self):
     """renders an object"""

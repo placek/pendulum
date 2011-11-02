@@ -20,6 +20,8 @@ class TestRod(unittest.TestCase):
 
   def setUp(self):
     self.rod = Rod((0.0, 0.0, 0.0), (1.0, 2.0, 3.0))
+    self.rod1 = Rod((0.0, 0.0, 0.0), (-1.0, 0.0, 0.0))
+    self.rod2 = Rod((0.0, 0.0, 0.0), (1.0, 0.0, 0.0))
 
   def test_instance_variables(self):
     self.assertEqual(self.rod.color, (255.0, 0.0, 0.0))
@@ -37,7 +39,10 @@ class TestRod(unittest.TestCase):
     self.assertEqual(self.rod.to_vector3()._get_2(), 3.0)
 
   def test_instance_angle_method(self):
-    self.assertEqual(self.rod.angle(), 2.1347389681555256)
+    # self.assertAlmostEqual(self.rod.angle(), )
+    self.assertEqual(math.degrees(self.rod1.angle()), -90.0)
+    self.assertEqual(math.degrees(self.rod2.angle()), 90.0)
+
 
 
 class TestRodsChain(unittest.TestCase):

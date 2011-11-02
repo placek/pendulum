@@ -16,6 +16,10 @@ class SimulationRunner(threading.Thread):
   screen_size = (500, 500)
   killed = False
 
+  def __init__(self, chain):
+    self.chain = chain
+    threading.Thread.__init__(self)
+
   # OpenGL window on_resize event handling
   def __resize(self, width, height):
     glViewport(0, 0, width, height)
@@ -25,9 +29,8 @@ class SimulationRunner(threading.Thread):
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-
   # OpenGL gaphics initialization
-  def __init(self):
+  def init_graphics(self):
     pygame.init()
     screen = pygame.display.set_mode(self.screen_size, HWSURFACE|OPENGL|DOUBLEBUF)
     self.__resize(*self.screen_size)
@@ -44,24 +47,16 @@ class SimulationRunner(threading.Thread):
 
   # thread body
   def run(self):
-    self.__init()
+    self.init_graphics()
     clock = pygame.time.Clock()
     glMaterial(GL_FRONT, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
     glMaterial(GL_FRONT, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-    chain = RodsChain()
-    chain.push(1.0, 45.0)
-    chain.push(0.5, 0.0)
     camera = Camera(clock, 5.0)
-
     while not self.killed:
       for event in pygame.event.get():
         if event.type == QUIT:
           return
-
-      # clear the screen, and z-buffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-      # modify camera view for key presses
       pressed = pygame.key.get_pressed()
       if pressed[K_LEFT]:
         camera.rotate((0.0, -1.0, 0.0))
@@ -76,9 +71,5 @@ class SimulationRunner(threading.Thread):
       elif pressed[K_a]:
         camera.move(+1.0)
       camera.rotate((0.0, 0.0, 0.0))
-
-      # render the chain
-      chain.render()
-
-      # show the screen
+      self.chain.render()
       pygame.display.flip()
