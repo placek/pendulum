@@ -22,51 +22,58 @@ class PendulumApp(Frame):
     self.chain = RodsChain()
     top = self.winfo_toplevel()
     top.rowconfigure(0, weight = 1)
+    top.rowconfigure(1, weight = 1)
     top.columnconfigure(0, weight = 1)
     self.columnconfigure(1, weight = 1)
-    self.left_frame = LabelFrame(self, text = "settings", labelanchor = "nw")
+    self.left_frame = LabelFrame(self, text = "first pendulum", labelanchor = "nw", width = 200)
     self.left_frame.grid(row = 0, rowspan = 1, column = 0, columnspan = 1)
-    self.right_frame = Frame(self)
+    self.right_frame = LabelFrame(self, text = "second pendulum", labelanchor = "nw", width = 200)
     self.right_frame.grid(row = 0, rowspan = 1, column = 1, columnspan = 1)
-    # list of objects with scrolling
-    self.yScroll = Scrollbar(self.left_frame, orient = VERTICAL)
-    self.yScroll.grid(row = 0, column = 1, sticky = N + S)
-    self.xScroll = Scrollbar(self.left_frame, orient = HORIZONTAL)
-    self.xScroll.grid(row = 1, column = 0, sticky = E + W)
-    self.list_values = StringVar()
-    self.listbox = Listbox(self.left_frame, xscrollcommand = self.xScroll.set,
-                                            yscrollcommand = self.yScroll.set,
-                                            listvariable = self.list_values,
-                                            state = DISABLED)
-    self.listbox.grid(row = 0, column = 0, sticky = N + S + E + W)
-    self.xScroll["command"] = self.listbox.xview
-    self.yScroll["command"] = self.listbox.yview
-    # inputs
-    self.angle_label = Label(self.left_frame, text = "angle", anchor = W)
-    self.angle_label.grid()
-    self.angle = Spinbox(self.left_frame, from_ = -179.5, to = 180, increment = 0.5, width = 5, wrap = True)
+    # inputs on left side
+    self.left_angle_label = Label(self.left_frame, text = "angle", anchor = W)
+    self.left_angle_label.grid()
+    self.left_angle = Spinbox(self.left_frame, from_ = -179.5, to = 180, increment = 0.5, width = 5, wrap = True)
     for _ in itertools.repeat(None, 359):
-      self.angle.invoke("buttonup")
-    self.angle.grid()
-    self.length_label = Label(self.left_frame, text = "lenght", anchor = W)
-    self.length_label.grid()
-    self.length = Spinbox(self.left_frame, from_ = 0.1, to = 4, increment = 0.1, width = 5)
+      self.left_angle.invoke("buttonup")
+    self.left_angle.grid()
+    self.left_length_label = Label(self.left_frame, text = "lenght", anchor = W)
+    self.left_length_label.grid()
+    self.left_length = Spinbox(self.left_frame, from_ = 0.1, to = 4, increment = 0.1, width = 5)
     for _ in itertools.repeat(None, 9):
-      self.length.invoke("buttonup")
-    self.length.grid()
-    # add_rod_button
-    self.add_rod_button = Button(self.left_frame, text = "add rod", command = self.add_rod)
-    self.add_rod_button.grid()
-    # remove_rod_button
-    self.remove_rod_button = Button(self.left_frame, text = "remove rod", command = self.remove_rod)
-    self.remove_rod_button.grid()
+      self.left_length.invoke("buttonup")
+    self.left_length.grid()
+    self.left_mass_label = Label(self.left_frame, text = "mass", anchor = W)
+    self.left_mass_label.grid()
+    self.left_mass = Spinbox(self.left_frame, from_ = 0.1, to = 4, increment = 0.1, width = 5)
+    for _ in itertools.repeat(None, 9):
+      self.left_mass.invoke("buttonup")
+    self.left_mass.grid()
+    # inputs on right side
+    self.right_angle_label = Label(self.right_frame, text = "angle", anchor = W)
+    self.right_angle_label.grid()
+    self.right_angle = Spinbox(self.right_frame, from_ = -179.5, to = 180, increment = 0.5, width = 5, wrap = True)
+    for _ in itertools.repeat(None, 359):
+      self.right_angle.invoke("buttonup")
+    self.right_angle.grid()
+    self.right_length_label = Label(self.right_frame, text = "lenght", anchor = W)
+    self.right_length_label.grid()
+    self.right_length = Spinbox(self.right_frame, from_ = 0.1, to = 4, increment = 0.1, width = 5)
+    for _ in itertools.repeat(None, 9):
+      self.right_length.invoke("buttonup")
+    self.right_length.grid()
+    self.right_mass_label = Label(self.right_frame, text = "mass", anchor = W)
+    self.right_mass_label.grid()
+    self.right_mass = Spinbox(self.right_frame, from_ = 0.1, to = 4, increment = 0.1, width = 5)
+    for _ in itertools.repeat(None, 9):
+      self.right_mass.invoke("buttonup")
+    self.right_mass.grid()
     # sumulation_button
     self.simulation_started = False
-    self.simulation_button = Button(self.right_frame, text = "start", command = self.simulation)
-    self.simulation_button.grid()
+    self.simulation_button = Button(self, text = "start", command = self.simulation)
+    self.simulation_button.grid(row = 1, rowspan = 1, column = 0, columnspan = 1)
     # quit_button
-    self.quit_button = Button(self.right_frame, text = "quit", command = self.quit)
-    self.quit_button.grid()
+    self.quit_button = Button(self, text = "quit", command = self.quit)
+    self.quit_button.grid(row = 1, rowspan = 1, column = 1, columnspan = 1)
 
   def quit(self):
     try:
@@ -86,13 +93,6 @@ class PendulumApp(Frame):
       self.simulation_button.configure(text = "start")
       self.simulation_started = False
 
-  def add_rod(self):
-    self.chain.push(float(self.length.get()), float(self.angle.get()))
-    self.list_values.set(" ".join([n.to_string() for n in self.chain.rods]))
-
-  def remove_rod(self):
-    self.chain.pop()
-    self.list_values.set(" ".join([n.to_string() for n in self.chain.rods]))
 
 app = PendulumApp()
 app.mainloop()
