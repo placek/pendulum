@@ -13,12 +13,9 @@ The Pendulum project is a study project that realises subject called
 What a Pendulum project assumes?
 --------------------------------
 
-There are two different types of objects:
- * metal stick, and
- * metal spring.
-
-Those objects are conected into a random chain. Depending on simulation
-starting conditions a bahavior of those elements will differ a lot.
+There are two mathematical pendulums hanged one on the other (connected
+into a chain). Depending on simulation starting conditions a bahavior of
+those elements will differ.
 
 Pendulum has to simulate behavior of such a chain of objects.
 

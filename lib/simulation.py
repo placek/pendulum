@@ -17,11 +17,12 @@ class SimulationRunner(threading.Thread):
   killed = False
 
   def __init__(self, chain):
+    """initializes the simulation thread"""
     self.chain = chain
     threading.Thread.__init__(self)
 
-  # OpenGL window on_resize event handling
   def __resize(self, width, height):
+    """OpenGL on resize window event handler"""
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -29,8 +30,8 @@ class SimulationRunner(threading.Thread):
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-  # OpenGL gaphics initialization
   def init_graphics(self):
+    """OpenGL graphics initializator"""
     pygame.init()
     screen = pygame.display.set_mode(self.screen_size, HWSURFACE|OPENGL|DOUBLEBUF)
     self.__resize(*self.screen_size)
@@ -43,10 +44,11 @@ class SimulationRunner(threading.Thread):
     glLight(GL_LIGHT0, GL_POSITION,  (0, 1, 1, 0))
 
   def kill(self):
+    """signal allowing to finish the thread life"""
     self.killed = True
 
-  # thread body
   def run(self):
+    """simulation thread body"""
     self.init_graphics()
     clock = pygame.time.Clock()
     glMaterial(GL_FRONT, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
@@ -71,5 +73,6 @@ class SimulationRunner(threading.Thread):
       elif pressed[K_a]:
         camera.move(+1.0)
       camera.rotate((0.0, 0.0, 0.0))
+      self.chain.update(clock.tick() / 1000.0)
       self.chain.render()
       pygame.display.flip()

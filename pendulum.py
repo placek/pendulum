@@ -13,13 +13,16 @@ from Tkinter import *
 class PendulumApp(Frame):
 
   def __init__(self, master = None):
+    """initialize an application main window"""
     Frame.__init__(self, master)
     self.grid()
     self.chain = RodsChain()
     self.create_widgets()
+    self.left_color = (255.0, 0.0, 0.0)
+    self.right_color = (0.0, 0.0, 255.0)
 
   def create_widgets(self):
-    self.chain = RodsChain()
+    """initialize applications main window components"""
     top = self.winfo_toplevel()
     top.rowconfigure(0, weight = 1)
     top.rowconfigure(1, weight = 1)
@@ -68,7 +71,6 @@ class PendulumApp(Frame):
       self.right_mass.invoke("buttonup")
     self.right_mass.grid()
     # sumulation_button
-    self.simulation_started = False
     self.simulation_button = Button(self, text = "start", command = self.simulation)
     self.simulation_button.grid(row = 1, rowspan = 1, column = 0, columnspan = 1)
     # quit_button
@@ -76,6 +78,7 @@ class PendulumApp(Frame):
     self.quit_button.grid(row = 1, rowspan = 1, column = 1, columnspan = 1)
 
   def quit(self):
+    """terminate the simulation thread and exit"""
     try:
       self.simulation_thread.kill()
       sys.exit()
@@ -83,15 +86,12 @@ class PendulumApp(Frame):
       sys.exit()
 
   def simulation(self):
-    if self.simulation_started == False:
-      self.simulation_thread = SimulationRunner(self.chain)
-      self.simulation_thread.start()
-      self.simulation_button.configure(text = "stop")
-      self.simulation_started = True
-    else:
-      self.simulation_thread.kill()
-      self.simulation_button.configure(text = "start")
-      self.simulation_started = False
+    """start simulation thread"""
+    self.chain.push(float(self.left_length.get()), math.radians(float(self.left_angle.get())), float(self.left_mass.get()), self.left_color)
+    self.chain.push(float(self.right_length.get()), math.radians(float(self.right_angle.get())), float(self.right_mass.get()), self.right_color)
+    self.simulation_thread = SimulationRunner(self.chain)
+    self.simulation_thread.start()
+    self.simulation_button.configure(state=DISABLED)
 
 
 app = PendulumApp()
